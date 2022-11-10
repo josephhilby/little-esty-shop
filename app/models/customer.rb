@@ -22,7 +22,3 @@ class Customer < ApplicationRecord
   end
 end
 
-# @merchant.customers.select(:id, :first_name, :last_name, "count(transactions.*) AS num_transactions").joins(invoices: [:transactions, :items]).where("transactions.result = 'success'").group(:id).order(num_transactions: :desc).limit(5)
-
-# Customer.select(:id, :first_name, :last_name, "count(transactions.*) AS num_transactions").joins(invoices: [:transactions, :items]).where("transactions.result = 'success'").where("items.merchant_id = ?", merchant_id).group(:id).order(num_transactions: :desc).limit(5)
-
