@@ -3,3 +3,4 @@
 
 <p>Quantity Threshold: <%= @discount.threshold %> items</p>
 <p>Percentage Discount: <%= @discount.discount %>%</p>
+<%= button_to "Edit Bulk Discount", edit_merchant_bulk_discount_path(@merchant, @discount), method: :get %> 
