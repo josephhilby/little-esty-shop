@@ -1,0 +1,10 @@
+<%= render partial: "shared/header", locals: { subtitle: @merchant.name } %>
+<h3 style="text-align:center;background-color:whitesmoke;border-top-style:solid">My Discounts</h3>
+
+<% @merchant.bulk_discounts.each do |discount| %>
+  <div id="bulk-discount-<%= discount.id %>">
+    <h2><%= link_to "Bulk Discount ##{discount.id}", merchant_bulk_discount_path(@merchant, discount) %></h2>
+    <p><%= "Quantity Threshold: #{discount.threshold} items" %></p>
+    <p><%= "Percentage Discount: #{discount.discount}%" %></p>
+  </div>
+<% end %>
