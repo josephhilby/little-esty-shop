@@ -15,15 +15,15 @@ class Invoice < ApplicationRecord
   end
 
   def customer_last
-    self.customer.last_name
+    customer.last_name
   end
 
   def customer_first
-    self.customer.first_name
+    customer.first_name
   end
 
   def total_revenue(merchant)
-    self.items.where(merchant_id: merchant).sum("invoice_items.quantity * invoice_items.unit_price")
+    items.where(merchant_id: merchant).sum("invoice_items.quantity * invoice_items.unit_price")
   end
 
   def discount_cost(merchant)
@@ -37,7 +37,7 @@ class Invoice < ApplicationRecord
   end
 
   def invoice_revenue
-    self.invoice_items.sum("quantity * unit_price")
+    invoice_items.sum("quantity * unit_price")
   end
 end
 
