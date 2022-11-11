@@ -11,4 +11,10 @@ class ApplicationController < ActionController::Base
     @contributors = [Contributor.new({total: 13, author: {login: "ashuhleyt"}}), Contributor.new({total: 13, author: {login: "ashuhleyt"}}), Contributor.new({total: 13, author: {login: "ashuhleyt"}}), Contributor.new({total: 13, author: {login: "ashuhleyt"}}) ]
     @latest_pr = Pull.new({number: 37})
   end
+
+  def error_message(errors)
+    errors.details.keys.map do |field|
+      errors.full_messages_for(field).first
+    end.join(", ") 
+  end
 end
