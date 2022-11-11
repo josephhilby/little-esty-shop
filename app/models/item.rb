@@ -22,4 +22,9 @@ class Item < ApplicationRecord
   def invoice_item_status(invoice_id)
     self.invoice_items.where(invoice_id: invoice_id).first.status
   end
+
+  # def find_discount(item)
+  #   item.merchant.bulk_discounts.each do |discount|
+  #      if item.
+  # end
 end

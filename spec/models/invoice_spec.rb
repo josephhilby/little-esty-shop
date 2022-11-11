@@ -32,7 +32,6 @@ RSpec.describe Invoice, type: :model do
     InvoiceItem.create!(invoice: @customer_1_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 3, status: 1)
     InvoiceItem.create!(invoice: @customer_1_invoice_1, item: @merchant_1_item_2, quantity: 4, unit_price: 6, status: 1)
 
-
     @customer_2_invoice_1 = @customer2.invoices.create!(status: 1)
     @customer_3_invoice_1 = @customer3.invoices.create!(status: 1)
     @customer_4_invoice_1 = @customer4.invoices.create!(status: 1)
@@ -41,11 +40,11 @@ RSpec.describe Invoice, type: :model do
     @customer_6_invoice_1 = @customer6.invoices.create!(status: 1)
     @customer_6_invoice_2 = @customer6.invoices.create!(status: 2)
 
-    InvoiceItem.create!(invoice: @customer_1_invoice_1, item: @merchant_1_item_1)
-    InvoiceItem.create!(invoice: @customer_1_invoice_2, item: @merchant_1_item_1)
-    InvoiceItem.create!(invoice: @customer_2_invoice_1, item: @merchant_2_item_1)
-    InvoiceItem.create!(invoice: @customer_2_invoice_1, item: @merchant_2_item_1)
-    InvoiceItem.create!(invoice: @customer_2_invoice_1, item: @merchant_2_item_1)
+    InvoiceItem.create!(invoice: @customer_1_invoice_1, item: @merchant_1_item_1, quantity: 0, unit_price: 0)
+    InvoiceItem.create!(invoice: @customer_1_invoice_2, item: @merchant_1_item_1, quantity: 0, unit_price: 0)
+    InvoiceItem.create!(invoice: @customer_2_invoice_1, item: @merchant_2_item_1, quantity: 0, unit_price: 0)
+    InvoiceItem.create!(invoice: @customer_2_invoice_1, item: @merchant_2_item_1, quantity: 0, unit_price: 0)
+    InvoiceItem.create!(invoice: @customer_2_invoice_1, item: @merchant_2_item_1, quantity: 0, unit_price: 0)
     InvoiceItem.create!(invoice: @customer_6_invoice_1, item: @merchant_2_item_1, quantity: 1, unit_price: 10)
     InvoiceItem.create!(invoice: @customer_6_invoice_1, item: @merchant_2_item_1, quantity: 1, unit_price: 10)
     InvoiceItem.create!(invoice: @customer_6_invoice_1, item: @merchant_3_item_1, quantity: 2, unit_price: 15)
@@ -96,6 +95,61 @@ RSpec.describe Invoice, type: :model do
     describe '#invoice_revenue' do
       it 'returns total revenue for specific invoices' do
         expect(@customer_1_invoice_1.invoice_revenue).to eq(27)
+      end
+    end
+
+    describe "#discount_cost" do 
+      it "returns the cost that is subtracted from the total revenue" do 
+        merchant = Merchant.create!(name: "Savory Spice")
+        discount_1 = merchant.bulk_discounts.create!(discount: 10, threshold: 5)
+        discount_2 = merchant.bulk_discounts.create!(discount: 20, threshold: 7 )
+        cumin = merchant.items.create!(name: "Cumin", description: "2 oz of ground cumin in a glass jar.", unit_price: 10)
+        thyme = merchant.items.create!(name: "Thyme", description: "2 oz of dried thyme in a glass jar.", unit_price: 10)
+        paprika = merchant.items.create!(name: "Paprika", description: "2 oz of dried paprika in a glass jar.", unit_price: 10)
+
+        other_merchant = Merchant.create!(name: "Other Merchant")
+        other_item = other_merchant.items.create!(name: "Other Item", description: "some stuff", unit_price: 15)
+        other_merchant_discount = other_merchant.bulk_discounts.create!(discount: 20, threshold: 5)
+
+        customer = Customer.create!(first_name: "Amanda", last_name: "Ross")
+        invoice = customer.invoices.create!(status: "In Progress")
+        InvoiceItem.create!(invoice: invoice, item: cumin, quantity: 5, unit_price: 10, status: 0)
+        InvoiceItem.create!(invoice: invoice, item: thyme, quantity: 2, unit_price: 10, status: 0)
+        InvoiceItem.create!(invoice: invoice, item: paprika, quantity: 8, unit_price: 10, status: 0)
+        InvoiceItem.create!(invoice: invoice, item: other_item, quantity: 10, unit_price: 10, status: 0)
+
+        invoice.transactions.create!(credit_card_number: 1234565312341234, credit_card_expiration_date: "10/26", result: "success")
+
+        expect(invoice.total_revenue(merchant)).to eq(150)
+        expect(invoice.discount_cost(merchant)).to eq(21)
+      end
+    end
+
+    describe '#discounted_revenue' do 
+      it 'returns the total discounted revenue for specific invoice and merchant' do 
+        merchant = Merchant.create!(name: "Savory Spice")
+        discount_1 = merchant.bulk_discounts.create!(discount: 10, threshold: 5)
+        discount_2 = merchant.bulk_discounts.create!(discount: 20, threshold: 7 )
+        cumin = merchant.items.create!(name: "Cumin", description: "2 oz of ground cumin in a glass jar.", unit_price: 10)
+        thyme = merchant.items.create!(name: "Thyme", description: "2 oz of dried thyme in a glass jar.", unit_price: 10)
+        paprika = merchant.items.create!(name: "Paprika", description: "2 oz of dried paprika in a glass jar.", unit_price: 10)
+
+        other_merchant = Merchant.create!(name: "Other Merchant")
+        other_item = other_merchant.items.create!(name: "Other Item", description: "some stuff", unit_price: 15)
+        other_merchant_discount = other_merchant.bulk_discounts.create!(discount: 20, threshold: 5)
+
+        customer = Customer.create!(first_name: "Amanda", last_name: "Ross")
+        invoice = customer.invoices.create!(status: "In Progress")
+        InvoiceItem.create!(invoice: invoice, item: cumin, quantity: 5, unit_price: 10, status: 0)
+        InvoiceItem.create!(invoice: invoice, item: thyme, quantity: 2, unit_price: 10, status: 0)
+        InvoiceItem.create!(invoice: invoice, item: paprika, quantity: 8, unit_price: 10, status: 0)
+        InvoiceItem.create!(invoice: invoice, item: other_item, quantity: 10, unit_price: 10, status: 0)
+
+        invoice.transactions.create!(credit_card_number: 1234565312341234, credit_card_expiration_date: "10/26", result: "success")
+
+        expect(invoice.total_revenue(merchant)).to eq(150)
+        expect(invoice.discount_cost(merchant)).to eq(21)
+        expect(invoice.discounted_revenue(merchant)).to eq(129)
       end
     end
   end

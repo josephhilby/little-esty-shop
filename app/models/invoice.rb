@@ -26,6 +26,16 @@ class Invoice < ApplicationRecord
     self.items.where(merchant_id: merchant).sum("invoice_items.quantity * invoice_items.unit_price")
   end
 
+  def discount_cost(merchant)
+    items.joins(invoice_items: :bulk_discount)
+      .where(merchant_id: merchant)
+      .sum("invoice_items.quantity * invoice_items.unit_price * (bulk_discounts.discount * 0.01)")
+  end
+
+  def discounted_revenue(merchant)
+    total_revenue(merchant) - discount_cost(merchant)
+  end
+
   def invoice_revenue
     self.invoice_items.sum("quantity * unit_price")
   end
