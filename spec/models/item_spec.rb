@@ -45,12 +45,6 @@ RSpec.describe Item, type: :model do
       end
     end
 
-    describe "#invoice_item_quantity" do
-      it 'selects an invoice_item quantity assoicated with that item through an invoice_id' do
-        expect(@item.invoice_item_quantity(@invoice_1)).to eq(6)
-      end
-    end
-
     describe "#invoice_item_by" do
       it 'selects an invoice_item object assoicated with that item through an invoice_id' do
         expect(@item.invoice_item_by(@invoice_1)).to eq(@invoice_item_1)
