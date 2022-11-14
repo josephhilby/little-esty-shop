@@ -14,7 +14,7 @@ class InvoiceItem < ApplicationRecord
   end
 
   def find_discount
-    item.merchant.bulk_discounts.where("#{quantity} >= bulk_discounts.threshold").order(threshold: :desc).first
+    item.merchant.bulk_discounts.where("#{quantity} >= bulk_discounts.threshold").order(discount: :desc).first
   end
 
   def add_discount 

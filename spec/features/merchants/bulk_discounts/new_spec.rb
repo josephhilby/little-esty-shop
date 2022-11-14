@@ -97,6 +97,20 @@ RSpec.describe "New Merchant Bulk Discount page" do
           expect(page).to have_content("Error: Threshold must be greater than 0")
         end
       end
+
+      it "doesn't let me create a discount that will never be applied" do 
+        # discount_3 = @merchant.bulk_discounts.create!(discount: 15, threshold: 15)
+        visit new_merchant_bulk_discount_path(@merchant)
+
+        fill_in(:discount, with: 15)
+        fill_in(:threshold, with: 15)
+        click_on("Submit")
+
+        expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant))
+        within "#flash-messages" do
+          expect(page).to have_content("Error: Discount is less than the current highest discount, but with a greater threshold, and will never be applied")
+        end
+      end
     end
   end
 
