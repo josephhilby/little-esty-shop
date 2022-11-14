@@ -32,7 +32,8 @@ tr:nth-child(even) {
   <% end %>
 
   <h4>Created on: <%= @invoice.created_at.strftime("%A, %B %d, %Y") %></h4>
-  <h4><b>Total Revenue:</b> $<%= @invoice.invoice_revenue %></h4>
+  <h4><b>Total Revenue:</b> $<%= @invoice.admin_total_revenue %></h4>
+  <h4><b>Total Discounted Revenue:</b> $<%= @invoice.admin_discounted_revenue %></h4>
 
   <h4>Customer:</h4>
   <p style="padding-left:4em"><%= "#{@customer.first_name} #{@customer.last_name}" %></p>

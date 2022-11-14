@@ -11,10 +11,6 @@ class Item < ApplicationRecord
     first.created_at
   end
 
-  def invoice_item_quantity(invoice_id)
-    self.invoice_items.where(invoice_id: invoice_id).pluck(:quantity).first
-  end
-
   def invoice_item_by(invoice_id)
     self.invoice_items.where(invoice_id: invoice_id).first
   end

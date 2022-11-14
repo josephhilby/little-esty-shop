@@ -15,19 +15,39 @@ class Invoice < ApplicationRecord
   end
 
   def customer_last
-    self.customer.last_name
+    customer.last_name
   end
 
   def customer_first
-    self.customer.first_name
+    customer.first_name
   end
 
   def total_revenue(merchant)
-    self.items.where(merchant_id: merchant).sum("invoice_items.quantity * invoice_items.unit_price")
+    items.where(merchant_id: merchant)
+         .sum("invoice_items.quantity * invoice_items.unit_price")
   end
 
-  def invoice_revenue
-    self.invoice_items.sum("quantity * unit_price")
+  def discount_cost(merchant)
+    items.joins(invoice_items: :bulk_discount)
+         .where(merchant_id: merchant)
+         .sum("invoice_items.quantity * invoice_items.unit_price * (bulk_discounts.discount * 0.01)")
+  end
+
+  def discounted_revenue(merchant)
+    total_revenue(merchant) - discount_cost(merchant)
+  end
+
+  def admin_total_revenue
+    invoice_items.sum("quantity * unit_price")
+  end
+
+  def admin_discount_cost
+    items.joins(invoice_items: :bulk_discount)
+         .sum("invoice_items.quantity * invoice_items.unit_price * (bulk_discounts.discount * 0.01)")
+  end
+
+  def admin_discounted_revenue
+    admin_total_revenue - admin_discount_cost
   end
 end
 

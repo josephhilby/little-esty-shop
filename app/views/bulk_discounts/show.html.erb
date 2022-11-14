@@ -1,0 +1,6 @@
+<%= render partial: "shared/header", locals: { subtitle: @merchant.name } %>
+<h3 style="text-align:center;background-color:whitesmoke;border-top-style:solid">Bulk Discount #<%= @discount.id %></h3>
+
+<p>Quantity Threshold: <%= @discount.threshold %> items</p>
+<p>Percentage Discount: <%= @discount.discount %>%</p>
+<%= button_to "Edit Bulk Discount", edit_merchant_bulk_discount_path(@merchant, @discount), method: :get %> 
