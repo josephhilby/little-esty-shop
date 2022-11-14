@@ -3,6 +3,7 @@ class Invoice < ApplicationRecord
   has_many :transactions
   has_many :invoice_items
   has_many :items, through: :invoice_items
+  has_many :bulk_discounts, through: :invoice_items
   enum status: ["Cancelled", "Completed", "In Progress"]
 
   def self.incomplete_invoices
@@ -27,27 +28,21 @@ class Invoice < ApplicationRecord
          .sum("invoice_items.quantity * invoice_items.unit_price")
   end
 
-  def discount_cost(merchant)
-    items.joins(invoice_items: :bulk_discount)
-         .where(merchant_id: merchant)
-         .sum("invoice_items.quantity * invoice_items.unit_price * (bulk_discounts.discount * 0.01)")
-  end
-
   def discounted_revenue(merchant)
-    total_revenue(merchant) - discount_cost(merchant)
+    invoice_items.joins(:item)
+                 .left_outer_joins(:bulk_discount)
+                 .where("items.merchant_id = #{merchant.id}")
+                 .sum("invoice_items.quantity * invoice_items.unit_price * (100 - coalesce(bulk_discounts.discount, 0)) * 0.01")
   end
 
   def admin_total_revenue
     invoice_items.sum("quantity * unit_price")
   end
 
-  def admin_discount_cost
-    items.joins(invoice_items: :bulk_discount)
-         .sum("invoice_items.quantity * invoice_items.unit_price * (bulk_discounts.discount * 0.01)")
-  end
-
   def admin_discounted_revenue
-    admin_total_revenue - admin_discount_cost
+    invoice_items.joins(:item)
+                 .left_outer_joins(:bulk_discount)
+                 .sum("invoice_items.quantity * invoice_items.unit_price * (100 - coalesce(bulk_discounts.discount, 0)) * 0.01")
   end
 end
 

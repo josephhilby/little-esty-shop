@@ -99,7 +99,6 @@ RSpec.describe "New Merchant Bulk Discount page" do
       end
 
       it "doesn't let me create a discount that will never be applied" do 
-        # discount_3 = @merchant.bulk_discounts.create!(discount: 15, threshold: 15)
         visit new_merchant_bulk_discount_path(@merchant)
 
         fill_in(:discount, with: 15)
@@ -112,7 +111,5 @@ RSpec.describe "New Merchant Bulk Discount page" do
         end
       end
     end
-  end
-
-       
+  end     
 end

@@ -110,25 +110,10 @@ RSpec.describe Invoice, type: :model do
       end
     end
 
-    describe "#discount_cost" do 
-      it "returns the cost that is subtracted from the total revenue for a particular merchant" do 
-        expect(@invoice.total_revenue(@merchant)).to eq(150)
-        expect(@invoice.discount_cost(@merchant)).to eq(21)
-      end
-    end
-
     describe '#discounted_revenue' do 
       it 'returns the total discounted revenue for specific invoice and merchant' do 
         expect(@invoice.total_revenue(@merchant)).to eq(150)
-        expect(@invoice.discount_cost(@merchant)).to eq(21)
         expect(@invoice.discounted_revenue(@merchant)).to eq(129)
-      end
-    end
-
-    describe "#admin_discount_cost" do 
-      it "returns the cost that is subtracted from the total revenue for the whole invoice" do 
-        expect(@invoice.admin_total_revenue).to eq(250)
-        expect(@invoice.admin_discount_cost).to eq(41)
       end
     end
 
