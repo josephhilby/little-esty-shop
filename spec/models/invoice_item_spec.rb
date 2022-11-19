@@ -7,14 +7,14 @@ RSpec.describe InvoiceItem, type: :model do
   end
 
   before(:each) do
-    @merchant_1 = Merchant.create!(name: "Dave")
-    @merchant_1_item_1 = @merchant_1.items.create!(name: "Pencil", description: "Writing implement", unit_price: 1)
+    @merchant_1 = create(:merchant)
+    @merchant_1_item_1 = create(:item, merchant: @merchant_1)
 
-    @customer_1 = Customer.create!(first_name: "Bob", last_name: "Jones")
+    @customer_1 = create(:customer)
     datetime = DateTime.iso8601('2022-11-01', Date::ENGLAND)
-    @customer_1_invoice_1 = @customer_1.invoices.create!(status: 1, created_at: datetime)
+    @customer_1_invoice_1 = create(:invoice, customer: @customer_1, created_at: datetime)
 
-    @invoice_item_1 = InvoiceItem.create!(invoice: @customer_1_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 4, status: 2)
+    @invoice_item_1 = create(:invoice_item, invoice: @customer_1_invoice_1, item: @merchant_1_item_1)
   end
 
   describe 'Instance Methods' do

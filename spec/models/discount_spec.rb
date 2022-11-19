@@ -29,6 +29,5 @@ RSpec.describe Discount, type: :model do
         expect(discounts.avaliable_discounts(@item_2)).to eq([@discount_3])
       end
     end
-
   end
 end

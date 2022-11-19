@@ -9,11 +9,11 @@ RSpec.describe Item, type: :model do
   end
 
   before(:each) do
-    @merchant = Merchant.create!(name: "The Candle Shop")
+    @merchant = create(:merchant)
     @merchant_2 = create(:merchant)
-    @item = @merchant.items.create!(name: "Pine Scented Candle", description: "beeswax candle", unit_price: 4)
+    @item = create(:item, merchant: @merchant)
     @item_2 = create(:item)
-    @customer = Customer.create!(first_name: "Lee", last_name: "Saville")
+    @customer = create(:customer)
 
     @jan_first = DateTime.new(2022,1,1,4,5,6)
     @jan_second = DateTime.new(2022,1,2,4,5,6)
@@ -21,24 +21,24 @@ RSpec.describe Item, type: :model do
     @feb_second = DateTime.new(2022,2,2,4,5,6)
     @feb_third = DateTime.new(2022,2,3,4,5,6)
 
-    @invoice_1 = @customer.invoices.create!(status: 1, created_at: @jan_first)
-    @invoice_2 = @customer.invoices.create!(status: 1, created_at: @jan_second)
-    @invoice_3 = @customer.invoices.create!(status: 1, created_at: @feb_first)
-    @invoice_4 = @customer.invoices.create!(status: 1, created_at: @feb_second)
-    @invoice_5 = @customer.invoices.create!(status: 1, created_at: @feb_third)
+    @invoice_1 = create(:invoice, customer: @customer, status: 1, created_at: @jan_first)
+    @invoice_2 = create(:invoice, customer: @customer, status: 1, created_at: @jan_second)
+    @invoice_3 = create(:invoice, customer: @customer, status: 1, created_at: @feb_first)
+    @invoice_4 = create(:invoice, customer: @customer, status: 1, created_at: @feb_second)
+    @invoice_5 = create(:invoice, customer: @customer, status: 1, created_at: @feb_third)
 
-    @invoice_item_1 = InvoiceItem.create!(invoice: @invoice_1, item: @item, quantity: 6, unit_price: 4, status: 'packaged')
-    InvoiceItem.create!(invoice: @invoice_1, item: @item_2, quantity: 10, unit_price: 10, status: 'packaged')
-    InvoiceItem.create!(invoice: @invoice_2, item: @item, quantity: 4, unit_price: 4)
-    InvoiceItem.create!(invoice: @invoice_3, item: @item, quantity: 12, unit_price: 4)
-    InvoiceItem.create!(invoice: @invoice_4, item: @item, quantity: 12, unit_price: 4)
-    InvoiceItem.create!(invoice: @invoice_5, item: @item, quantity: 20, unit_price: 4)
+    @invoice_item_1 = create(:invoice_item, invoice: @invoice_1, item: @item, quantity: 6, unit_price: 4, status: 'packaged')
+    create(:invoice_item, invoice: @invoice_1, item: @item_2, quantity: 10, unit_price: 10, status: 'packaged')
+    create(:invoice_item, invoice: @invoice_2, item: @item, quantity: 4, unit_price: 4)
+    create(:invoice_item, invoice: @invoice_3, item: @item, quantity: 12, unit_price: 4)
+    create(:invoice_item, invoice: @invoice_4, item: @item, quantity: 12, unit_price: 4)
+    create(:invoice_item, invoice: @invoice_5, item: @item, quantity: 20, unit_price: 4)
 
-    @invoice_1.transactions.create!(credit_card_number: 123456789, credit_card_expiration_date: "07/2023", result: "success")
-    @invoice_2.transactions.create!(credit_card_number: 123456789, credit_card_expiration_date: "07/2023", result: "success")
-    @invoice_3.transactions.create!(credit_card_number: 123456789, credit_card_expiration_date: "07/2023", result: "success")
-    @invoice_4.transactions.create!(credit_card_number: 123456789, credit_card_expiration_date: "07/2023", result: "success")
-    @invoice_5.transactions.create!(credit_card_number: 123456789, credit_card_expiration_date: "07/2023", result: "failed")
+    create(:transaction, invoice: @invoice_1, result: "success")
+    create(:transaction, invoice: @invoice_2,  result: "success")
+    create(:transaction, invoice: @invoice_3,  result: "success")
+    create(:transaction, invoice: @invoice_4,  result: "success")
+    create(:transaction, invoice: @invoice_5,  result: "failed")
   end
 
   describe "Instance Methods" do
