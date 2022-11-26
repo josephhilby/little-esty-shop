@@ -85,11 +85,11 @@ RSpec.describe("admin merchants index page") do
     InvoiceItem.create!(    invoice: @invoice_10,     item: @item17,     quantity: 1,     unit_price: 17,     status: 2)
     InvoiceItem.create!(    invoice: @invoice_10,     item: @item18,     quantity: 1,     unit_price: 18,     status: 2)
     @invoice_10.transactions.create!(    credit_card_number: 123456789,     credit_card_expiration_date: "07/2023",     result: "failed")
+    visit(admin_merchants_path)
   end
 
   describe("24.admin merchants index") do
     it("24.displays name of each merchant in the system") do
-      visit(admin_merchants_path)
       expect(page).to(have_content(@merchant1.name))
       expect(page).to(have_content(@merchant2.name))
       expect(page).to(have_content(@merchant3.name))
@@ -98,8 +98,6 @@ RSpec.describe("admin merchants index page") do
 
   describe("25.I click on the name of a merchant from the admin merchants index page,") do
     it("25.I am taken to that merchant's admin show page (/admin/merchants/merchant_id)") do
-      visit(admin_merchants_path)
-
       within("#Disabled") do
         click_link("Tokyos Tractors")
       end
@@ -109,8 +107,6 @@ RSpec.describe("admin merchants index page") do
     end
 
     it("25.And I see the name of that merchant") do
-      visit(admin_merchants_path)
-
       within("#Disabled") do
         click_link("#{@merchant1.name}")
       end

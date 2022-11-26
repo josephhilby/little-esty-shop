@@ -11,7 +11,7 @@ RSpec.describe InvoiceItem, type: :model do
     @merchant_1_item_1 = create(:item, merchant: @merchant_1)
 
     @customer_1 = create(:customer)
-    datetime = DateTime.iso8601('2022-11-01', Date::ENGLAND)
+    datetime = DateTime.new(2022,11,1)
     @customer_1_invoice_1 = create(:invoice, customer: @customer_1, created_at: datetime)
 
     @invoice_item_1 = create(:invoice_item, invoice: @customer_1_invoice_1, item: @merchant_1_item_1)

@@ -1,33 +1,32 @@
 require "rails_helper"
 
-
-RSpec.describe("admin merchants index page") do
+RSpec.describe "Admin Merchants Index Page" do
   before(:each) do
-    @merchant1 = Merchant.create!(    name: "Tokyos Tractors")
-    @merchant2 = Merchant.create!(    name: "Oslos Outdoor Market")
-    @merchant3 = Merchant.create!(    name: "Berlins Building Supply")
-    visit(admin_merchants_path)
+    @merchant_1 = create(:merchant)
+    @merchant_2 = create(:merchant)
+    @merchant_3 = create(:merchant)
+    visit admin_merchants_path
   end
 
-  describe("24.admin merchants index") do
-    it("24.displays name of each merchant in the system") do
-      expect(page).to(have_content(@merchant1.name))
-      expect(page).to(have_content(@merchant2.name))
-      expect(page).to(have_content(@merchant3.name))
+  describe "Admin merchants index" do
+    it "Displays name of each merchant in the system" do
+      expect(page).to have_content(@merchant_1.name)
+      expect(page).to have_content(@merchant_2.name)
+      expect(page).to have_content(@merchant_3.name)
     end
   end
 
-  describe("25.I click on the name of a merchant from the admin merchants index page,") do
-    it("25.I am taken to that merchant's admin show page (/admin/merchants/merchant_id)") do
-      click_link("#{@merchant1.name}")
-      expect(current_path).to(eq(admin_merchant_path(@merchant1.id)))
-      expect(page).to(have_content("Name: #{@merchant1.name}"))
+  describe "I click on the name of a merchant from the admin merchants index page" do
+    it "I am taken to that merchant's admin show page (/admin/merchants/merchant_id)" do
+      click_link("#{@merchant_1.name}")
+      expect(current_path).to eq(admin_merchant_path(@merchant_1.id))
+      expect(page).to have_content("Name: #{@merchant_1.name}")
     end
 
-    it("25.And I see the name of that merchant") do
-      click_link("#{@merchant1.name}")
-      expect(current_path).to(eq(admin_merchant_path(@merchant1.id)))
-      expect(page).to(have_content("Name: #{@merchant1.name}"))
+    it "And I see the name of that merchant" do
+      click_link("#{@merchant_1.name}")
+      expect(current_path).to eq(admin_merchant_path(@merchant_1.id))
+      expect(page).to(have_content("Name: #{@merchant_1.name}"))
     end
   end
 end

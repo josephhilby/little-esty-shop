@@ -5,7 +5,8 @@ RSpec.describe("Discounts Show Page") do
     @merchant = create(:merchant)
     @discount_1 = create(:discount, merchant: @merchant, quantity_threshold: 30, percentage_discount: 30)
     @discount_2 = create(:discount, merchant: @merchant, quantity_threshold: 50, percentage_discount: 50)
-    visit(merchant_discount_path(@merchant, @discount_1))
+
+    visit merchant_discount_path(@merchant, @discount_1)
   end
   describe 'When I visit /merchants/:merchant_id/discounts/:id' do
     describe 'Then I see' do

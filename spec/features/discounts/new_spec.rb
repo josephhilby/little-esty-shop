@@ -3,7 +3,8 @@ require "rails_helper"
 RSpec.describe("Discounts New Page") do
   before(:each) do
     @merchant = create(:merchant)
-    visit(new_merchant_discount_path(@merchant))
+
+    visit new_merchant_discount_path(@merchant)
   end
   describe 'When I visit /merchants/:merchant_id/discounts/new' do
     describe 'Then I see' do

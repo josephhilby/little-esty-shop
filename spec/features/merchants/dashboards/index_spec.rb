@@ -3,69 +3,66 @@ require 'date'
 
 RSpec.describe 'On the Merchant Dashboard Index Page' do
   before(:each) do
-    @merchant_1 = Merchant.create!(name: "Dave")
-    @merchant_2 = Merchant.create!(name: "Kevin")
+    @merchant_1 = create(:merchant)
+    @merchant_2 = create(:merchant)
 
-    @merchant_1_item_1 = @merchant_1.items.create!(name: "Pencil", description: "Writing implement", unit_price: 1)
-    @merchant_1_item_not_ordered = @merchant_1.items.create!(name: "Unordered Item", description: "...", unit_price: 2)
-    @merchant_1_item_3 = @merchant_1.items.create!(name: "Newest Item", description: "...", unit_price: 1)
-    @merchant_2_item_1 = @merchant_2.items.create!(name: "Mechanical Pencil", description: "Writing implement", unit_price: 2)
+    @merchant_1_item_1 = create(:item, merchant: @merchant_1)
+    @merchant_1_item_not_ordered = create(:item, merchant: @merchant_1)
+    @merchant_1_item_3 = create(:item, merchant: @merchant_1)
+    @merchant_2_item_1 = create(:item, merchant: @merchant_2)
 
-    @customer_1 = Customer.create!(first_name: "Bob", last_name: "Jones")
-    @customer_2 = Customer.create!(first_name: "Milly", last_name: "Smith")
-    @customer_3 = Customer.create!(first_name: "David", last_name: "Hill")
-    @customer_4 = Customer.create!(first_name: "Sarah", last_name: "Miller")
-    @customer_5 = Customer.create!(first_name: "Patrick", last_name: "Baker")
-    @customer_6 = Customer.create!(first_name: "Rebecca", last_name: "Simpson")
+    @customer_1 = create(:customer)
+    @customer_2 = create(:customer)
+    @customer_3 = create(:customer)
+    @customer_4 = create(:customer)
+    @customer_5 = create(:customer)
+    @customer_6 = create(:customer)
 
-    date = DateTime.new(2022,11,2,3,4,5)
-    #invoice status: 0 cancelled, 1 completed, 2 in progress
+    date = DateTime.new(2022,11,1,3,4,5)
 
-    datetime = DateTime.iso8601('2022-11-01', Date::ENGLAND)
-    @customer_1_invoice_1 = @customer_1.invoices.create!(status: 1, created_at: datetime)
-    @customer_1_invoice_2 = @customer_1.invoices.create!(status: 1)
+    @customer_1_invoice_1 = create(:invoice, customer: @customer_1, status: 1, created_at: date)
+    @customer_1_invoice_2 = create(:invoice, customer: @customer_1, status: 1)
 
+    @customer_2_invoice_1 = create(:invoice, customer: @customer_2, status: 1)
+    @customer_3_invoice_1 = create(:invoice, customer: @customer_3, status: 1)
+    @customer_4_invoice_1 = create(:invoice, customer: @customer_4, status: 1)
+    @customer_5_invoice_1 = create(:invoice, customer: @customer_5, status: 1)
 
-    @customer_2_invoice_1 = @customer_2.invoices.create!(status: 1, created_at: date)
-    @customer_3_invoice_1 = @customer_3.invoices.create!(status: 1, created_at: date)
-    @customer_4_invoice_1 = @customer_4.invoices.create!(status: 1, created_at: date)
-    @customer_5_invoice_1 = @customer_5.invoices.create!(status: 1, created_at: date)
+    @customer_6_invoice_1 = create(:invoice, customer: @customer_6, status: 1)
+    @customer_6_invoice_2 = create(:invoice, customer: @customer_6, status: 0)
 
-    @customer_6_invoice_1 = @customer_6.invoices.create!(status: 1, created_at: date)
-    @customer_6_invoice_2 = @customer_6.invoices.create!(status: 0, created_at: date)
+    @invoice_item_1 = create(:invoice_item, invoice: @customer_1_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 4, status: 2)
+    create(:invoice_item, invoice: @customer_1_invoice_2, item: @merchant_2_item_1, quantity: 1, unit_price: 4, status: 0)
 
-    @invoice_item_1 = InvoiceItem.create!(invoice: @customer_1_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 4, status: 2)
-    InvoiceItem.create!(invoice: @customer_1_invoice_2, item: @merchant_2_item_1, quantity: 1, unit_price: 4, status: 0)
+    create(:invoice_item, invoice: @customer_2_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 4, status: 2)
+    create(:invoice_item, invoice: @customer_3_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 4, status: 2)
+    create(:invoice_item, invoice: @customer_4_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 4, status: 2)
+    create(:invoice_item, invoice: @customer_5_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 4, status: 2)
 
-    InvoiceItem.create!(invoice: @customer_2_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 4, status: 2)
-    InvoiceItem.create!(invoice: @customer_3_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 4, status: 2)
-    InvoiceItem.create!(invoice: @customer_4_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 4, status: 2)
-    InvoiceItem.create!(invoice: @customer_5_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 4, status: 2)
+    @invoice_item_2 = create(:invoice_item, invoice: @customer_6_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 4, status: 0)
+    @invoice_item_3 = create(:invoice_item, invoice: @customer_6_invoice_2, item: @merchant_1_item_1, quantity: 1, unit_price: 4, status: 1)
 
-    @invoice_item_2 = InvoiceItem.create!(invoice: @customer_6_invoice_1, item: @merchant_1_item_1, quantity: 1, unit_price: 4, status: 0)
-    @invoice_item_3 = InvoiceItem.create!(invoice: @customer_6_invoice_2, item: @merchant_1_item_1, quantity: 1, unit_price: 4, status: 1)
+    @customer_1_transaction_1 = create(:transaction, invoice: @customer_1_invoice_1, result: 'success')
+    @customer_1_transaction_2 = create(:transaction, invoice: @customer_1_invoice_1, result: 'success')
+    @customer_1_transaction_3 = create(:transaction, invoice: @customer_1_invoice_1, result: 'success')
+    @customer_1_transaction_4 = create(:transaction, invoice: @customer_1_invoice_2, result: 'success')
 
-    @customer_1_transaction_1 = @customer_1_invoice_1.transactions.create!(credit_card_number: 1234123412341234, result: 'success')
-    @customer_1_transaction_2 = @customer_1_invoice_1.transactions.create!(credit_card_number: 1234123412341234, result: 'success')
-    @customer_1_transaction_3 = @customer_1_invoice_1.transactions.create!(credit_card_number: 1234123412341234, result: 'success')
-    @customer_1_transaction_4 = @customer_1_invoice_2.transactions.create!(credit_card_number: 1234123412341234, result: 'success')
+    @customer_2_transaction_1 = create(:transaction, invoice: @customer_2_invoice_1, result: 'success')
+    @customer_2_transaction_2 = create(:transaction, invoice: @customer_2_invoice_1, result: 'success')
 
-    @customer_2_transaction_1 = @customer_2_invoice_1.transactions.create!(credit_card_number: 1234123412341234, result: 'success')
-    @customer_2_transaction_2 = @customer_2_invoice_1.transactions.create!(credit_card_number: 1234123412341234, result: 'success')
+    @customer_3_transaction_1 = create(:transaction, invoice: @customer_3_invoice_1, result: 'success')
+    @customer_3_transaction_2 = create(:transaction, invoice: @customer_3_invoice_1, result: 'success')
 
-    @customer_3_transaction_1 = @customer_3_invoice_1.transactions.create!(credit_card_number: 1234123412341234, result: 'success')
-    @customer_3_transaction_2 = @customer_3_invoice_1.transactions.create!(credit_card_number: 1234123412341234, result: 'success')
+    @customer_4_transaction_1 = create(:transaction, invoice: @customer_4_invoice_1, result: 'success')
+    @customer_4_transaction_2 = create(:transaction, invoice: @customer_4_invoice_1, result: 'success')
 
-    @customer_4_transaction_1 = @customer_4_invoice_1.transactions.create!(credit_card_number: 1234123412341234, result: 'success')
-    @customer_4_transaction_2 = @customer_4_invoice_1.transactions.create!(credit_card_number: 1234123412341234, result: 'success')
+    @customer_5_transaction_1 = create(:transaction, invoice: @customer_5_invoice_1, result: 'success')
+    @customer_5_transaction_2 = create(:transaction, invoice: @customer_5_invoice_1, result: 'success')
 
-    @customer_5_transaction_1 = @customer_5_invoice_1.transactions.create!(credit_card_number: 1234123412341234, result: 'success')
-    @customer_5_transaction_2 = @customer_5_invoice_1.transactions.create!(credit_card_number: 1234123412341234, result: 'success')
+    @customer_6_transaction_1 = create(:transaction, invoice: @customer_6_invoice_1, result: 'success')
+    @customer_6_transaction_2 = create(:transaction, invoice: @customer_6_invoice_2, result: 'failed')
 
-    @customer_6_transaction_1 = @customer_6_invoice_1.transactions.create!(credit_card_number: 1234123412341234, result: 'success')
-    @customer_6_transaction_2 = @customer_6_invoice_2.transactions.create!(credit_card_number: 1234123412341234, result: 'failed')
-
-    visit "/merchants/#{@merchant_1.id}/dashboard"
+    visit merchant_dashboard_index_path(@merchant_1)
   end
   describe 'When I visit /merchants/:merchant_id/dashboard' do
     describe 'Then I see' do
@@ -122,12 +119,12 @@ RSpec.describe 'On the Merchant Dashboard Index Page' do
         end
 
         it 'listed from oldest to newest' do
-          within "#items-to-ship-merchant-#{@merchant_1.id}" do
-            customer_7 = Customer.create!(first_name: "Newest", last_name: "Customer")
-            customer_7_invoice_1 = customer_7.invoices.create!(status: 1)
-            InvoiceItem.create!(invoice: customer_7_invoice_1, item: @merchant_1_item_3, quantity: 1, unit_price: 4, status: 0)
-            visit "/merchants/#{@merchant_1.id}/dashboard"
+          customer_7 = create(:customer)
+          customer_7_invoice_1 = create(:invoice, customer: customer_7, status: 1)
+          create(:invoice_item, invoice: customer_7_invoice_1, item: @merchant_1_item_3, quantity: 1, unit_price: 4, status: 0)
+          visit merchant_dashboard_index_path(@merchant_1)
 
+          within "#items-to-ship-merchant-#{@merchant_1.id}" do
             expect(@merchant_1_item_1.name).to appear_before(@merchant_1_item_3.name, only_text: true)
           end
         end

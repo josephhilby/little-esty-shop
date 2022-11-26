@@ -4,7 +4,8 @@ RSpec.describe("Discounts Edit Page") do
   before(:each) do
     @merchant = create(:merchant)
     @discount_1 = create(:discount, merchant: @merchant, quantity_threshold: 30, percentage_discount: 40)
-    visit(edit_merchant_discount_path(@merchant, @discount_1))
+
+    visit edit_merchant_discount_path(@merchant, @discount_1)
   end
 
   describe 'When I visit /merchants/:merchant_id/discounts/:id/edit' do
