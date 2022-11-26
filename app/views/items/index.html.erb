@@ -15,7 +15,6 @@
   clear: both;
 }
 </style>
-
 <body>
   <%= render partial: "shared/header", locals: { subtitle: @merchant.name } %>
   <h3 style="text-align:center;background-color:whitesmoke;border-top-style:solid">My Items</h3>
@@ -27,7 +26,7 @@
         <% @enabled_items.each do |item| %>
           <div id="item-<%= item.id %>">
             <p style="display:inline-block">
-              <%= link_to item.name, merchant_item_path(@merchant, item) %> 
+              <%= link_to item.name, merchant_item_path(@merchant, item) %>
               <%= button_to "Disable", merchant_item_path(@merchant, item), form: {style: 'display:inline-block;padding-left:1em'}, method: :patch, params: {status: "disabled"} %>
             </p>
           </div>

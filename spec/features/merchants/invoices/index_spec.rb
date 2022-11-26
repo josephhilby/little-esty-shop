@@ -3,27 +3,27 @@ require 'date'
 
 RSpec.describe 'On the Merchant Invoices Index Page' do
   before(:each) do
-    @merchant_1 = Merchant.create!(name: "Dave")
-    @merchant_2 = Merchant.create!(name: "Kevin")
+    @merchant_1 = create(:merchant)
+    @merchant_2 = create(:merchant)
 
-    @merchant_1_item_1 = @merchant_1.items.create!(name: "Pencil", description: "Writing implement", unit_price: 1)
-    @merchant_2_item_1 = @merchant_2.items.create!(name: "Merchant 2 Item", description: "...", unit_price: 2)
+    @merchant_1_item_1 = create(:item, merchant: @merchant_1)
+    @merchant_2_item_1 = create(:item, merchant: @merchant_2)
 
-    @customer_1 = Customer.create!(first_name: "Bob", last_name: "Jones")
-    @customer_2 = Customer.create!(first_name: "Milly", last_name: "Smith")
-    @customer_3 = Customer.create!(first_name: "David", last_name: "Hill")
+    @customer_1 = create(:customer)
+    @customer_2 = create(:customer)
+    @customer_3 = create(:customer)
 
-    @customer_1_invoice_1 = @customer_1.invoices.create!(status: 1)
-    @customer_1_invoice_2 = @customer_1.invoices.create!(status: 1)
-    @customer_2_invoice_1 = @customer_2.invoices.create!(status: 1)
-    @customer_3_invoice_1 = @customer_3.invoices.create!(status: 1)
+    @customer_1_invoice_1 = create(:invoice, customer: @customer_1, status: 1)
+    @customer_1_invoice_2 = create(:invoice, customer: @customer_1, status: 1)
+    @customer_2_invoice_1 = create(:invoice, customer: @customer_2, status: 1)
+    @customer_3_invoice_1 = create(:invoice, customer: @customer_3, status: 1)
 
-    InvoiceItem.create!(invoice: @customer_1_invoice_1, item: @merchant_1_item_1, quantity: 1, status: 2)
-    InvoiceItem.create!(invoice: @customer_1_invoice_2, item: @merchant_1_item_1, quantity: 1, status: 2)
-    InvoiceItem.create!(invoice: @customer_2_invoice_1, item: @merchant_1_item_1, quantity: 1, status: 2)
-    InvoiceItem.create!(invoice: @customer_3_invoice_1, item: @merchant_2_item_1, quantity: 1, status: 2)
+    create(:invoice_item, invoice: @customer_1_invoice_1, item: @merchant_1_item_1)
+    create(:invoice_item, invoice: @customer_1_invoice_2, item: @merchant_1_item_1)
+    create(:invoice_item, invoice: @customer_2_invoice_1, item: @merchant_1_item_1)
+    create(:invoice_item, invoice: @customer_3_invoice_1, item: @merchant_2_item_1)
 
-    visit "/merchants/#{@merchant_1.id}/invoices"
+    visit merchant_invoices_path(@merchant_1)
   end
   describe 'When I visit /merchants/:merchant_id/invoices' do
     describe 'Then I see' do
